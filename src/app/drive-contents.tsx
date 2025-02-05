@@ -1,80 +1,50 @@
-"use client";
-
-import { useMemo, useState } from "react";
-import { Upload, ChevronRight } from "lucide-react";
+import { ChevronRight, Upload } from "lucide-react";
+import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import { FileRow, FolderRow } from "./file-row";
 import type {
-  files as filesSchema,
-  folders as foldersSchema,
+  fileTable as filesSchema,
+  folderTable as foldersSchema,
 } from "~/server/db/schema";
+import { FileRow, FolderRow } from "./file-row";
+import UploadBtn from "./upload-btn";
 
-export default function DriveContents({
-  files,
-  folders,
-}: {
+export default function DriveContents(props: {
+  parents: (typeof foldersSchema.$inferSelect)[];
   files: (typeof filesSchema.$inferSelect)[];
   folders: (typeof foldersSchema.$inferSelect)[];
 }) {
-  const [currentFolder, setCurrentFolder] = useState(1);
-
-  const handleFolderClick = (folderId: number) => {
-    setCurrentFolder(folderId);
-  };
-
-  const breadcrumbs = useMemo(() => {
-    const breadcrumbs = [];
-    let currentId = currentFolder;
-
-    while (currentId != 1) {
-      const folder = folders.find((folder) => folder.id === currentId);
-      if (folder) {
-        breadcrumbs.unshift(folder);
-        currentId = folder.parent ?? 1;
-      } else {
-        break;
-      }
-    }
-
-    return breadcrumbs;
-  }, [currentFolder, folders]);
-
-  const handleUpload = () => {
-    alert("Upload functionality would be implemented here");
-  };
+  // don't show the root folder on the breadcrumbs
+  const breadcrumbs = props.parents.filter((folder) => folder.id !== 1);
+  const currentPath = props.parents.map((folder) => folder.id).join("/");
+  console.log("path passed in:", currentPath);
 
   return (
     <div className="min-h-screen bg-gray-900 p-8 text-gray-100">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center">
-            <Button
-              onClick={() => setCurrentFolder(1)}
-              variant="ghost"
+            <Link
+              href={`/f/${encodeURIComponent("1")}`}
               className="mr-2 text-gray-300 hover:text-white"
             >
               My Drive
-            </Button>
-            {breadcrumbs.map((folder, _index) => (
+            </Link>
+            {breadcrumbs.map((folder, ind) => (
               <div key={folder.id} className="flex items-center">
                 <ChevronRight className="mx-2 text-gray-500" size={16} />
-                <Button
-                  onClick={() => handleFolderClick(folder.id)}
-                  variant="ghost"
+                <Link
+                  href={`/f/1/${breadcrumbs
+                    .slice(0, ind + 1)
+                    .map((f) => f.id)
+                    .join("/")}`}
                   className="text-gray-300 hover:text-white"
                 >
                   {folder.name}
-                </Button>
+                </Link>
               </div>
             ))}
           </div>
-          <Button
-            onClick={handleUpload}
-            className="bg-blue-600 text-white hover:bg-blue-700"
-          >
-            <Upload className="mr-2" size={20} />
-            Upload
-          </Button>
+          <UploadBtn />
         </div>
         <div className="rounded-lg bg-gray-800 shadow-xl">
           <div className="border-b border-gray-700 px-6 py-4">
@@ -85,15 +55,21 @@ export default function DriveContents({
             </div>
           </div>
           <ul>
-            {folders.map((folder) => (
+            {props.folders.map((folder) => (
               <FolderRow
+                url={`/f/${currentPath}/${encodeURIComponent(folder.id)}`}
                 folder={folder}
-                handleFolderClick={() => handleFolderClick(folder.id)}
+                name={folder.name}
                 key={folder.id}
               />
             ))}
-            {files.map((file) => (
-              <FileRow file={file} key={file.id} />
+            {props.files.map((file) => (
+              <FileRow
+                name={file.name}
+                size={file.size}
+                url={file.url}
+                key={file.id}
+              />
             ))}
           </ul>
         </div>
