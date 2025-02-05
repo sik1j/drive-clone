@@ -1,6 +1,5 @@
-import { Folder as MockFolder, File } from "~/lib/mock-data";
-import { Folder, FileIcon, Upload, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { type Folder as MockFolder, type File } from "~/lib/mock-data";
+import { Folder, FileIcon } from "lucide-react";
 
 export function FileRow({ file }: { file: File }) {
   return (
@@ -19,7 +18,7 @@ export function FileRow({ file }: { file: File }) {
             {file.name}
           </a>
         </div>
-        <div className="col-span-3 text-gray-400">"File"</div>
+        <div className="col-span-3 text-gray-400">File</div>
         <div className="col-span-3 text-gray-400">{file.size}</div>
       </div>
     </li>
@@ -48,8 +47,8 @@ export function FolderRow({
             {folder.name}
           </button>
         </div>
-        <div className="col-span-3 text-gray-400">"Folder"</div>
-        <div className="col-span-3 text-gray-400">"--"</div>
+        <div className="col-span-3 text-gray-400">Folder</div>
+        <div className="col-span-3 text-gray-400">--</div>
       </div>
     </li>
   );
