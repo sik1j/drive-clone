@@ -1,6 +1,5 @@
-import { ChevronRight, Upload } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
 import type {
   fileTable as filesSchema,
   folderTable as foldersSchema,
@@ -58,7 +57,6 @@ export default function DriveContents(props: {
             {props.folders.map((folder) => (
               <FolderRow
                 url={`/f/${currentPath}/${encodeURIComponent(folder.id)}`}
-                folder={folder}
                 name={folder.name}
                 key={folder.id}
               />

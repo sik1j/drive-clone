@@ -1,6 +1,5 @@
 import { Folder, FileIcon } from "lucide-react";
 import Link from "next/link";
-import { fileTable, folderTable } from "~/server/db/schema";
 
 export function FileRow(props: { url: string; name: string; size: string }) {
   return (
@@ -23,11 +22,7 @@ export function FileRow(props: { url: string; name: string; size: string }) {
   );
 }
 
-export function FolderRow(props: {
-  folder: typeof folderTable.$inferSelect;
-  name: string;
-  url: string;
-}) {
+export function FolderRow(props: { name: string; url: string }) {
   return (
     <li className="hover:bg-gray-750 border-b border-gray-700 px-6 py-4">
       <div className="grid grid-cols-12 items-center gap-4">
