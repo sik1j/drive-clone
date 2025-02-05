@@ -10,16 +10,31 @@ export default async function FolderPage(props: {
   }
 
   const currentFolderId = folderIds[folderIds.length - 1]!;
+  const parentFoldersPromise = Promise.all(
+    folderIds.map((folderId) => QUERY.getFolderById(folderId)),
+  ).then((folders) => folders.map((folder) => folder[0]!));
 
   const [files, folders, parents] = await Promise.all([
     QUERY.getFilesByParent(currentFolderId),
     QUERY.getFoldersByParent(currentFolderId),
-    Promise.all(folderIds.map((folderId) => QUERY.getFolderById(folderId))),
+    parentFoldersPromise,
   ]);
+
+  const currentPath = parents.map((folder) => folder.id).join("/");
+  const breadcrumbs = parents
+    .filter((folder) => folder.id !== 1)
+    .map((folder, ind, self) => ({
+      link: `/f/1/${self
+        .slice(0, ind + 1)
+        .map((f) => f.id)
+        .join("/")}`,
+      ...folder,
+    }));
 
   return (
     <DriveContents
-      parents={parents.map((p) => p[0]!)}
+      currentPath={currentPath}
+      breadcrumbs={breadcrumbs}
       files={files}
       folders={folders}
     />

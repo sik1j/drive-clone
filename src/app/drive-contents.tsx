@@ -8,15 +8,15 @@ import { FileRow, FolderRow } from "./file-row";
 import UploadBtn from "./upload-btn";
 
 export default function DriveContents(props: {
-  parents: (typeof foldersSchema.$inferSelect)[];
+  currentPath: string;
+  breadcrumbs: {
+    link: string;
+    id: number;
+    name: string;
+  }[];
   files: (typeof filesSchema.$inferSelect)[];
   folders: (typeof foldersSchema.$inferSelect)[];
 }) {
-  // don't show the root folder on the breadcrumbs
-  const breadcrumbs = props.parents.filter((folder) => folder.id !== 1);
-  const currentPath = props.parents.map((folder) => folder.id).join("/");
-  console.log("path passed in:", currentPath);
-
   return (
     <div className="min-h-screen bg-gray-900 p-8 text-gray-100">
       <div className="mx-auto max-w-6xl">
@@ -28,17 +28,14 @@ export default function DriveContents(props: {
             >
               My Drive
             </Link>
-            {breadcrumbs.map((folder, ind) => (
-              <div key={folder.id} className="flex items-center">
+            {props.breadcrumbs.map((crumb) => (
+              <div key={crumb.id} className="flex items-center">
                 <ChevronRight className="mx-2 text-gray-500" size={16} />
                 <Link
-                  href={`/f/1/${breadcrumbs
-                    .slice(0, ind + 1)
-                    .map((f) => f.id)
-                    .join("/")}`}
+                  href={crumb.link}
                   className="text-gray-300 hover:text-white"
                 >
-                  {folder.name}
+                  {crumb.name}
                 </Link>
               </div>
             ))}
@@ -56,7 +53,7 @@ export default function DriveContents(props: {
           <ul>
             {props.folders.map((folder) => (
               <FolderRow
-                url={`/f/${currentPath}/${encodeURIComponent(folder.id)}`}
+                url={`/f/${props.currentPath}/${encodeURIComponent(folder.id)}`}
                 name={folder.name}
                 key={folder.id}
               />
