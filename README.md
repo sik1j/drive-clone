@@ -10,7 +10,7 @@
 ### Note 03-02-2025
 
 Finished connecting database. Next steps:
-- [ ] Update schema to show files and folders
-- [ ] Manually insert examples
+- [x] Update schema to show files and folders
+- [x] Manually insert examples
 - [ ] Render them in the UI
 - [ ] Push and make sure it all works
