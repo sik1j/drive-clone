@@ -6,6 +6,7 @@ import type {
 } from "~/server/db/schema";
 import { FileRow, FolderRow } from "./file-row";
 import UploadBtn from "./upload-btn";
+import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/nextjs";
 
 export default function DriveContents(props: {
   currentPath: string;
@@ -40,7 +41,12 @@ export default function DriveContents(props: {
               </div>
             ))}
           </div>
-          <UploadBtn />
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
         <div className="rounded-lg bg-gray-800 shadow-xl">
           <div className="border-b border-gray-700 px-6 py-4">
