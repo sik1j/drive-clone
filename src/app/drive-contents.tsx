@@ -5,7 +5,6 @@ import type {
   folderTable as foldersSchema,
 } from "~/server/db/schema";
 import { FileRow, FolderRow } from "./file-row";
-import UploadBtn from "./upload-btn";
 import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/nextjs";
 
 export default function DriveContents(props: {
